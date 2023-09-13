@@ -16,6 +16,9 @@ PYDANTIC_RESERVED_FIELD_NAMES = [
     name for name in dir(BaseModel) if not name.startswith("_")
 ]
 
+# credit: https://www.php.net/manual/en/function.preg-replace.php#111695
+REG_TO_SNAKE_CASE = re.compile(r"(?<!^)([A-Z][a-z]|(?<=[a-z])[^a-z]|(?<=[A-Z])[0-9_])(?<!_)")
+
 
 def ast_to_str(
     ast_obj: ast.AST,
@@ -33,8 +36,7 @@ def ast_to_str(
 
 def str_to_snake_case(name: str) -> str:
     """Converts camelCase or PascalCase string into snake_case."""
-    result = "".join([f"_{c.lower()}" if c.isupper() else c for c in name])
-    return result[1:] if result.startswith("_") else result
+    return REG_TO_SNAKE_CASE.sub(r"_\1", name).lower()
 
 
 def str_to_pascal_case(name: str) -> str:

@@ -9,6 +9,8 @@ from ariadne_codegen.utils import (
     format_multiline_strings,
     get_variable_indent_size,
     process_name,
+    str_to_snake_case,
+    str_to_pascal_case,
 )
 
 
@@ -153,3 +155,29 @@ def test_process_name_returns_name_returned_from_plugin_for_name_with_only_under
         )
         == "name_from_plugin"
     )
+
+
+@pytest.mark.parametrize(
+    ["source", "expected"],
+    [
+        ("camelCase", "camel_case"),
+        ("PascalCase", "pascal_case"),
+        ("SOMETHINGWeird", "something_weird"),
+    ],
+)
+def test_str_to_snake_case(
+    source, expected
+):
+    assert str_to_snake_case(source) == expected
+
+@pytest.mark.parametrize(
+    ["source", "expected"],
+    [
+        ("snake_case", "SnakeCase"),
+        ("camelCase", "CamelCase"),
+    ],
+)
+def test_str_to_pascal_case(
+    source, expected
+):
+    assert str_to_pascal_case(source) == expected
